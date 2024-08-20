@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <meta property="og:image:alt" content="">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css'>
+</head>
+
+<body style="position: relative;" class="a4-page" id="body">
+
+  <!-- Popup Modal -->
+  <div id="resizeModal" style="display: none; position: absolute; background: #fff; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
+    <h2>Resize QR Code</h2>
+    <label for="width">Width:</label>
+    <input type="number" id="width" min="10" step="1" style="margin-bottom: 10px;"><br>
+    <label for="height">Height:</label>
+    <input type="number" id="height" min="10" step="1" style="margin-bottom: 10px;"><br>
+    <button id="applyResize">Apply</button>
+    <button id="cancelResize">Cancel</button>
+  </div>
+  <div class="moveable-able moveable-able-container display-none" id="moveable-popup">
+    <i tooltip="Launch Expression Builder" class="fa fa-bold moveable-able moveable-able-item display-none"></i>
+    <i tooltip="Line height" class="fa fa-arrow-up moveable-able moveable-able-item display-none"></i>
+    <i tooltip="Line height" class="fa fa-arrow-down moveable-able moveable-able-item display-none"></i>
+    <i tooltip="Duplicate" class="fa fa-clone moveable-able moveable-able-item display-none"></i>
+    <i tooltip="Increase Font Size" class="fas fa-plus moveable-able moveable-able-item display-none"></i>
+    <i tooltip="Decrease Font Size" class="fas fa-minus moveable-able moveable-able-item display-none"></i>
+    <div class="moveable-able moveable-able-seperator display-none">|</div>
+    <i tooltip="Delete" class="fa fa-trash moveable-able moveable-able-item display-none"></i>
+    <i tooltip="Change Position" data="left" class="fa fa-align-left moveable-able moveable-able-item display-none"></i>
+    <i tooltip="Change Position" data="center" class="fa fa-align-center moveable-able moveable-able-item display-none"></i>
+    <i tooltip="Change Position" data="right" class="fa fa-align-right moveable-able moveable-able-item display-none"></i>
+  </div>
+<header id="header" class="clickable" style="display: block; font-size: 12px; line-height: 1;  width: 100%; position: relative; z-index: 1; background: #f5f5f5">
+    <div id="header-content" style="padding: 0 10px; margin: 0 10px;" >
+      <div class="editor-selector">
+        <p style=""><span>Prof. Dr. Hasan Shahriar</span></p>
+        <p style=""><span>MBBS, MD (Psychiatry)</span></p>
+        <p style=""><span>Psychiatrist</span></p>
+        <p style=""><span>Associate Professor and Head of Department of Psychiatry</span></p>
+        <p style=""><span>Holy Family Red Crescent Medical College, Dhaka</span></p>
+        <p style=""><span>Family Red Crescent Medical College, Dhaka</span></p>
+      </div>
+    </div>
+
+    <article style="border-top: 2px solid #000000; border-bottom: 2px solid #000000;padding: 0 20px; margin: 0 10px;" id="header-patient" class="clickable main-content">
+      <!-- Container for the Quill editor toolbar -->
+      <div style="display: flex; justify-content: space-between;align-items: center;">
+        <p class="clickable main-content"><span>Farmer Name:</span> <span>{{ basicInfo.farmerName }}</span></p>
+        <p class="clickable main-content"><span>Address:</span> <span>{{ basicInfo.address }}</span></p>
+        <p class="clickable main-content"><span>Date:</span> <span>{{ basicInfo.date }}</span></p>
+      </div>
+    </article>
+</header>
+
+<main id="main-content" class="" style="font-size: 12px; line-height: 1; width: 100%; position: relative">
+
+  <article id="prescription" style="display: flex; justify-content: flex-start;">
+    <article style="width: 49%; " id="prescription-left">
+      <div id="complaints" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
+          <p class="clickable main-content"><span>Complaints</span></p>
+        <samp>{{#prescription.complaints}}</samp>
+          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
+            <p class="clickable main-content"><span>Details:</span> <span>{{value}}</span></p>
+            <p class="clickable main-content"><span>{{remarks}}</span></p>
+          </div>
+        <samp>{{/prescription.complaints}}</samp>
+      </div>
+
+      <div id="findings-info" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
+        <p class="clickable main-content"><span>Clinical Findings</span></p>
+          <samp>{{#prescription.clinicalFindings}}</samp>
+          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
+            <p class="clickable main-content" ><span>Details:</span> <span>{{value}}</span></p>
+            <p class="clickable main-content"><span>{{remarks}}</span></p>
+          </div>
+
+        <samp>{{/prescription.clinicalFindings}}</samp>
+      </div>
+
+      <div id="postmortem-info" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
+        <p class="clickable main-content"><span>Postmortem Findings</span></p>
+        <samp>{{#prescription.postmortemFindings}}</samp>
+          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
+            <p class="clickable main-content"><span>Details:</span> <span>{{value}}</span></p>
+            <p class="clickable main-content"><span>{{remarks}}</span></p>
+          </div>
+          <samp>{{/prescription.postmortemFindings}}</samp>
+      </div>
+    </article>
+
+    <div id="resizable-divider" style="width: 2px; background-color: #000000; page-break-inside: avoid;cursor: ew-resize; position: relative;"></div>
+
+
+    <article style="width: 49%;" id="prescription-right">
+      <div id="advice-info" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
+          <p class="clickable main-content"><span>Advices</span></p>
+          <samp>{{#prescription.advices}}</samp>
+          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
+            <p class="clickable main-content"><span>Details:</span> <span>{{value}}</span></p>
+            <p class="clickable main-content"><span>{{remarks}}</span></p>
+          </div>
+        <samp>{{/prescription.advices}}</samp>
+      </div>
+
+      <div id="medication-info" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
+          <p class="clickable main-content"><span>Medications</span></p>
+        <samp>{{#prescription.medications}}</samp>
+          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
+            <p class="clickable main-content"><span>{{brandName}} {{strength}}</span> </p>
+            <p class="clickable main-content"><span>{{quantity}}gm + {{quantity}}gm + {{quantity}}gm</span></p>
+            <p class="clickable main-content"><span>{{remarks}}</span></p>
+          </div>
+        <samp>{{/prescription.medications}}</samp>
+      </div>
+
+    </article>
+  </article>
+
+</main>
+
+  <footer id="footer" style="line-height: 1;margin: 10px;height: 100px;" class="clickable">
+    <article style="padding: 0 10px; width: 100%;  white-space: nowrap; display: flex; justify-content: flex-start; align-items: center" class="footer-content area-selector">
+      <div class="qrcode" style=" width: 100px; height: 100px; vertical-align: top; display: flex; justify-content: center; align-items: center"></div>
+      <div style="font-size: 12px;" class="footer-details area-selector">
+        <p style="margin-top: 0!important;"><span>{{prescription.rxNumber}}</span></p>
+        <p style="margin-top: 0!important;"><span>Agro app প্রেসক্রিপশন  পেতে কোডটি স্ক্যান করুন</span></p>
+        <p style="margin-top: 0!important;"><span>Powered by AGRO</span></p>
+      </div>
+    </article>
+
+  </footer>
+
+<article id="config-buttons" style="position: absolute; bottom: -50px; right: 0; background: transparent">
+  <button
+    style="cursor:pointer;
+                width: 100%;
+                margin: 0 1.5%;
+                padding: 10px;
+                border-radius: 5px;
+                text-transform: uppercase;
+                font-size: 14px;
+                background: gray;
+                color: white;
+                border: 0"
+    onclick="updateConfig()"
+  >
+    Update config
+  </button>
+</article>
+</body>
+
+<!-- External QR code library -->
+<!--This is the liberary which helps to convert simple data to the images-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="js/app.js"></script>
+</html>
