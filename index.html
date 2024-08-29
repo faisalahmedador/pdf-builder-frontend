@@ -26,6 +26,10 @@
 
 <body style="position: relative;" class="a4-page" id="body">
 
+  <button id="dragButton" class="display-none drag-button" style="cursor: move; z-index: 2">
+    <i class="fa fa-arrows-alt drag-button"></i>
+  </button>
+
   <!-- Popup Modal -->
   <div id="resizeModal" style="display: none; position: absolute; background: #fff; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
     <h2>Resize QR Code</h2>
@@ -43,6 +47,7 @@
     <i tooltip="Duplicate" class="fa fa-clone moveable-able moveable-able-item display-none"></i>
     <i tooltip="Increase Font Size" class="fas fa-plus moveable-able moveable-able-item display-none"></i>
     <i tooltip="Decrease Font Size" class="fas fa-minus moveable-able moveable-able-item display-none"></i>
+
     <div class="moveable-able moveable-able-seperator display-none">|</div>
     <i tooltip="Delete" class="fa fa-trash moveable-able moveable-able-item display-none"></i>
     <i tooltip="Change Position" data="left" class="fa fa-align-left moveable-able moveable-able-item display-none"></i>

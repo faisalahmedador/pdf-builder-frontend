@@ -305,7 +305,7 @@ textarea {
 }
 
 .moveable {
-  cursor: move;
+  /*cursor: move;*/
 }
 
 .moveable-able-container .moveable-able-item {
@@ -342,6 +342,8 @@ textarea {
 samp {
   display: none;
 }
+
+
 
 @media screen and (max-width: 480px){
   span {

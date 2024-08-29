@@ -1,17 +1,171 @@
 import pdfData from './vendor/pdfInfo';
-import { makeMoveable } from './makeMoveablePrescription';
-import { makeResizeable } from './makeResizeable';
 import { createFunctionPopup } from './openFunctionPopup';
 import {resetPopup} from "./resetFunctionPopup";
 
 let selectedHtml = '';
 let qrcode = '';
+let touchDevice = false;
+let placeholder = '';
 const popupElement = document.getElementById('moveable-popup');
-
 const mainElement = document.getElementById('main-content');
 const footerElement = document.getElementById('footer');
+const headerElement = document.getElementById('header');
+const leftPanel = document.getElementById('prescription-left');
+const rightPanel = document.getElementById('prescription-right');
+const divider = document.getElementById('resizable-divider');
+const dragButton = document.getElementById('dragButton');
 
-footerElement.addEventListener('mousedown', function (e) {
+function enableMouseEventListener() {
+  footerElement.addEventListener('mousedown', editFooterElement);
+  mainElement.addEventListener('mousedown', editMainElement);
+  headerElement.addEventListener('mousedown', editHeaderElement);
+  divider.addEventListener('mousedown', startResizing);
+  dragButton.addEventListener('mousedown', onDragStart);
+}
+
+function onDragStart(e) {
+  console.log(e, 'onDragStart')
+  placeholder = createPlaceholder(selectedHtml);
+  selectedHtml.addEventListener('dragstart', onDragging);
+  selectedHtml.addEventListener('dragend', onDragEnd);
+  leftPanel.addEventListener('dragover', onDragOver);
+  leftPanel.addEventListener('drop', onDrop);
+  rightPanel.addEventListener('dragover', onDragOver);
+  rightPanel.addEventListener('drop', onDrop);
+}
+
+
+
+function onDragging(e) {
+  console.log(selectedHtml)
+  e.dataTransfer?.setData('text/plain', '');
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => {
+    selectedHtml.style.display = 'none';
+  }, 0);
+}
+
+function onDragEnd(e) {
+  console.log('dragEnd::',placeholder)
+  if (placeholder.parentNode) {
+    selectedHtml.style.display = '';
+    placeholder.parentNode.removeChild(placeholder);
+  }
+}
+
+function onDragOver(e) {
+  resetPopup(popupElement);
+  e.stopPropagation();
+  e.preventDefault();
+
+  let target = e.target;
+
+  if (target && target !== selectedHtml && target.classList.contains('moveable')) {
+    let bounding = target.getBoundingClientRect();
+    let offset = bounding.y + bounding.height / 2;
+
+    if (e.clientY - offset > 0) {
+      target.parentNode.insertBefore(placeholder, target.nextSibling);
+    } else {
+      target.parentNode.insertBefore(placeholder, target);
+    }
+  }
+}
+
+function onDrop(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  if (placeholder.parentNode) {
+    selectedHtml.style.display = '';
+    placeholder.parentNode.replaceChild(selectedHtml, placeholder);
+  }
+  cleanup();
+}
+
+function enableTouchEventListener() {
+  footerElement.addEventListener('touchstart', editFooterElement);
+  mainElement.addEventListener('touchstart', editMainElement);
+  headerElement.addEventListener('touchstart', editHeaderElement);
+  divider.addEventListener('touchstart', startResizing);
+  dragButton.addEventListener('touchstart', onTouchStart);
+}
+
+function createPlaceholder(selectedHtml) {
+  let placeholder = document.createElement('div');
+  placeholder.style.height = selectedHtml.clientHeight + 'px';
+  placeholder.style.backgroundColor = 'transparent';
+  placeholder.style.margin = '10px';
+  placeholder.style.border = '1px dotted #c0c0c0'; // Visible placeholder
+  selectedHtml.draggable = true;
+  return placeholder;
+}
+
+function onTouchStart(e) {
+  console.log(selectedHtml)
+  placeholder = createPlaceholder(selectedHtml);
+  setTimeout(() => {
+    // e.dataTransfer?.setData('text/plain', '');
+    // e.dataTransfer.effectAllowed = 'move';
+    selectedHtml.style.display = 'none';
+    document.addEventListener('touchmove', onTouchMove);
+    document.addEventListener('touchend', onTouchEnd);
+  }, 0);
+}
+
+function onTouchMove(e) {
+  e.preventDefault();
+
+  let target = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+
+  if (target && target !== selectedHtml && target.classList.contains('moveable')) {
+    let bounding = target.getBoundingClientRect();
+    let offset = bounding.y + bounding.height / 2;
+
+    if (e.touches[0].clientY - offset > 0) {
+      target.parentNode.insertBefore(placeholder, target.nextSibling);
+    } else {
+      target.parentNode.insertBefore(placeholder, target);
+    }
+  }
+}
+
+function onTouchEnd(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  if (placeholder.parentNode) {
+    console.log(placeholder.parentNode)
+    selectedHtml.style.display = '';
+    placeholder.parentNode.replaceChild(selectedHtml, placeholder);
+  }
+  cleanup();
+}
+
+function cleanup() {
+  if(touchDevice) {
+    document.removeEventListener('touchmove', onTouchMove);
+    document.removeEventListener('touchend', onTouchEnd);
+  } else {
+    dragButton.removeEventListener('dragstart', onDragStart);
+    dragButton.removeEventListener('dragend', onDragEnd);
+    leftPanel.removeEventListener('dragover', onDragOver);
+    leftPanel.removeEventListener('drop', onDrop);
+    rightPanel.removeEventListener('dragover', onDragOver);
+    rightPanel.removeEventListener('drop', onDrop);
+  }
+  placeholder = '';
+  selectedHtml.removeChild(dragButton)
+  dragButton.classList.remove('display-block');
+  dragButton.classList.add('display-none');
+  dragButton.style = "cursor: move; z-index: 2";
+  console.log('cleanup')
+}
+
+
+document.addEventListener('keydown', onKeyDown);
+
+document.addEventListener('DOMContentLoaded', onInitiate)
+
+function editFooterElement(e) {
   if(selectedHtml) {
     removeSelectedHtml();
   }
@@ -48,7 +202,7 @@ footerElement.addEventListener('mousedown', function (e) {
     widthInput.value = selectedHtml.offsetWidth;
     heightInput.value = selectedHtml.offsetHeight;
 
-    applyButton.addEventListener('click', function (e) {
+    applyButton.addEventListener('mousedown', function (e) {
       const newWidth = parseInt(widthInput.value, 10);
       const newHeight = parseInt(heightInput.value, 10);
 
@@ -70,45 +224,28 @@ footerElement.addEventListener('mousedown', function (e) {
       selectedHtml = ''
     })
 
-    // Cancel button click event
-    cancelButton.addEventListener('click', () => {
+    // Cancel button mousedown event
+    cancelButton.addEventListener('mousedown', () => {
       // Hide the modal
       resizeModal.style.display = 'none';
     });
   }
-})
+}
 
-
-
-document.addEventListener('keydown', function (e) {
-  setTimeout(() => {
-    const selectedElement = e.target;
-    console.log(selectedElement)
-    const appPTags = selectedElement.querySelectorAll('p');
-    const createSpan = (tag) => {
-      const infoSpan = document.createElement('span');
-      const tagHtml = tag.innerHTML;
-      tag.innerHTML = '';
-      infoSpan.innerHTML = tagHtml;
-      tag.appendChild(infoSpan);
+function editMainElement(e) {
+  // Check if dragButton is visible
+  if (dragButton.classList.contains('display-block')) {
+    if(e.target.classList.contains('drag-button')) {
+      return
     }
+    cleanup();
+  }
 
-    appPTags.forEach((tag) => {
-      if (!tag.querySelector('span') || tag.textContent.trim() === '') {
-        createSpan(tag);
-      }
-    }, 0)
-  })
-})
-
-
-
-
-mainElement.addEventListener('mousedown', function(e) {
   if(selectedHtml) {
     removeSelectedHtml();
   }
 
+  console.log(e.target.classList.contains('moveable'))
   if(e.target === e.currentTarget || e.target.tagName === 'ARTICLE') {
     selectedHtml = e.currentTarget;
     selectedHtml.contentEditable = 'true';
@@ -116,8 +253,15 @@ mainElement.addEventListener('mousedown', function(e) {
     let functions = ['line-height', 'position'];
     createFunctionPopup(selectedHtml, functions);
   }  else if(e.target.classList.contains('moveable')) {
-      selectedHtml = e.target;
-      makeMoveable(selectedHtml, resetPopup.bind(null, popupElement));
+    selectedHtml = e.target;
+      selectedHtml.appendChild(dragButton)
+      dragButton.classList.remove('display-none');
+      dragButton.classList.add('display-block');
+      dragButton.style.position = 'absolute';
+      dragButton.style.top = selectedHtml.offsetTop + 'px';
+      dragButton.style.left = selectedHtml.offsetLeft + 'px';
+      console.log(selectedHtml)
+
 
   } else if(e.target.classList.contains('prescription-details')) {
     selectedHtml = e.target;
@@ -128,24 +272,11 @@ mainElement.addEventListener('mousedown', function(e) {
     selectedHtml = e.target;
     createFunctionPopup(selectedHtml, ['bold', 'size']);
   }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-  qrcode = new QRCode(document.querySelector(".qrcode"), {
-    width: 80,
-    height: 80,
-    margin: '10px'
-  });
-// Initial QR code generation
-// with a default message
-  qrcode.makeCode(`${pdfData.prescription.rxNumber}`);
-})
+  console.log(selectedHtml)
+}
 
-
-
-const headerElement = document.getElementById('header');
-
-headerElement.addEventListener('click', function(event) {
+function editHeaderElement(event) {
 
   if(selectedHtml) {
     removeSelectedHtml();
@@ -179,22 +310,83 @@ headerElement.addEventListener('click', function(event) {
     selectedHtml = event.target;
     createFunctionPopup(selectedHtml, ['bold', 'size']);
   }
-});
-
-
-export function cloneHeaderElement() {
-  const newElement = document.querySelector('.editor-selector').cloneNode(true);
-  newElement.classList.add('editor-selector');
-  const headerContainer = document.getElementById('header-content');
-  headerContainer.style.display = 'flex';
-  headerContainer.style.justifyContent = 'space-between';
-  headerContainer.style.alignItems = 'center';
-  headerContainer.setAttribute('elements', '2');
-  resetPopup(popupElement);
-  createFunctionPopup(selectedHtml, ['line-height','position', 'remove-header']);
-  headerContainer.appendChild(newElement);
 }
 
+function onKeyDown(e) {
+  setTimeout(() => {
+    const selectedElement = e.target;
+    console.log(selectedElement)
+    const appPTags = selectedElement.querySelectorAll('p');
+    const createSpan = (tag) => {
+      const infoSpan = document.createElement('span');
+      const tagHtml = tag.innerHTML;
+      tag.innerHTML = '';
+      infoSpan.innerHTML = tagHtml;
+      tag.appendChild(infoSpan);
+    }
+
+    appPTags.forEach((tag) => {
+      if (!tag.querySelector('span') || tag.textContent.trim() === '') {
+        createSpan(tag);
+      }
+    }, 0)
+  })
+
+  console.log(e.target)
+}
+
+function onInitiate(e) {
+  console.log(e)
+  qrcode = new QRCode(document.querySelector(".qrcode"), {
+    width: 80,
+    height: 80,
+    margin: '10px'
+  });
+
+
+  touchDevice = !!(navigator.maxTouchPoints || 'ontouchstart' in document.documentElement);
+  touchDevice ? enableTouchEventListener() : enableMouseEventListener();
+  console.log(touchDevice)
+// Initial QR code generation
+// with a default message
+  qrcode.makeCode(`${pdfData.prescription.rxNumber}`);
+}
+
+function startResizing(e) {
+  document.addEventListener('mousemove', resizePanels);
+  document.addEventListener('touchmove', resizePanels);
+  document.addEventListener('mouseup', stopDragging);
+  document.addEventListener('touchend', stopDragging);
+}
+
+function resizePanels(e) {
+  const container = document.getElementById('prescription');
+  const containerRect = container.getBoundingClientRect();
+
+  // Determine the position based on touch or mouse event
+  let dividerPosition;
+  if (e.type === 'mousemove') {
+    dividerPosition = e.clientX - containerRect.left;
+  } else if (e.type === 'touchmove') {
+    dividerPosition = e.touches[0].clientX - containerRect.left;
+  }
+
+  const totalWidth = containerRect.width;
+  const leftWidth = ((dividerPosition / totalWidth) * 100).toFixed(2);
+  const rightWidth = (100 - parseFloat(leftWidth)).toFixed(2);
+
+  // Assuming you have leftPanel and rightPanel already defined
+  leftPanel.style.width = `${leftWidth}%`;
+  rightPanel.style.width = `${rightWidth}%`;
+}
+
+function stopDragging() {
+  // Removing both mouse and touch events
+  document.removeEventListener('mousemove', resizePanels);
+  document.removeEventListener('touchmove', resizePanels);
+  document.removeEventListener('mouseup', stopDragging);
+  document.removeEventListener('touchend', stopDragging);
+}
 
 
 window.updateConfig = function (){
@@ -234,6 +426,20 @@ window.updateConfig = function (){
     });
 };
 
+export function cloneHeaderElement() {
+  const newElement = document.querySelector('.editor-selector').cloneNode(true);
+  newElement.classList.add('editor-selector');
+  const headerContainer = document.getElementById('header-content');
+  headerContainer.style.display = 'flex';
+  headerContainer.style.justifyContent = 'space-between';
+  headerContainer.style.alignItems = 'center';
+  headerContainer.setAttribute('elements', '2');
+  resetPopup(popupElement);
+  createFunctionPopup(selectedHtml, ['line-height','position', 'remove-header']);
+  headerContainer.appendChild(newElement);
+}
+
+
 export function removeSelectedHtml(clear=false) {
   if(clear) {
     selectedHtml.parentNode.removeChild(selectedHtml);
@@ -253,33 +459,4 @@ export function removeHeaderContent() {
   selectedHtml.setAttribute('elements', '1');
   resetPopup(popupElement);
   createFunctionPopup(selectedHtml, ['clone', 'position', 'line-height']);
-}
-
-const divider = document.getElementById('resizable-divider');
-const leftPanel = document.getElementById('prescription-left');
-const rightPanel = document.getElementById('prescription-right');
-
-divider.addEventListener('mousedown', startDragging);
-
-function startDragging(e) {
-  document.addEventListener('mousemove', resizePanels);
-  document.addEventListener('mouseup', stopDragging);
-}
-
-function resizePanels(e) {
-  const container = document.getElementById('prescription');
-  const containerRect = container.getBoundingClientRect();
-  const dividerPosition = e.clientX - containerRect.left;
-  const totalWidth = containerRect.width;
-
-  const leftWidth = ((dividerPosition / totalWidth) * 100).toFixed(2);
-  const rightWidth = (100 - parseFloat(leftWidth)).toFixed(2);
-
-  leftPanel.style.width = `${leftWidth}%`;
-  rightPanel.style.width = `${rightWidth}%`;
-}
-
-function stopDragging() {
-  document.removeEventListener('mousemove', resizePanels);
-  document.removeEventListener('mouseup', stopDragging);
 }
