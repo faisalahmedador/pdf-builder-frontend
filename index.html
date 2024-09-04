@@ -22,13 +22,19 @@
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#fafafa">
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css'>
+  <!-- External QR code library -->
+  <!--This is the liberary which helps to convert simple data to the images-->
+  <script type="text/javascript" src="js/vendor/qrcode.min.js"></script>
+  <script type="module" src="js/app.js"></script>
 </head>
 
 <body style="position: relative;" class="a4-page" id="body">
 
-  <button id="dragButton" class="display-none drag-button" style="cursor: move; z-index: 2">
-    <i class="fa fa-arrows-alt drag-button"></i>
-  </button>
+<div id="editContentContainer" style="display: none; position: absolute; background: #fff; top: 30%; margin: auto; padding: 20px; border: 1px solid #ccc; z-index: 2;">
+  <h2 id="editContentLabel">Update Text Content</h2>
+  <button id="applyEdit">Apply</button>
+  <button id="cancelEdit">Cancel</button>
+</div>
 
   <!-- Popup Modal -->
   <div id="resizeModal" style="display: none; position: absolute; background: #fff; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
@@ -40,7 +46,7 @@
     <button id="applyResize">Apply</button>
     <button id="cancelResize">Cancel</button>
   </div>
-  <div class="moveable-able moveable-able-container display-none" id="moveable-popup">
+  <div class="moveable-able moveable-able-container display-none" id="moveable-popup" style="z-index: 3">
     <i tooltip="Launch Expression Builder" class="fa fa-bold moveable-able moveable-able-item display-none"></i>
     <i tooltip="Line height" class="fa fa-arrow-up moveable-able moveable-able-item display-none"></i>
     <i tooltip="Line height" class="fa fa-arrow-down moveable-able moveable-able-item display-none"></i>
@@ -54,85 +60,89 @@
     <i tooltip="Change Position" data="center" class="fa fa-align-center moveable-able moveable-able-item display-none"></i>
     <i tooltip="Change Position" data="right" class="fa fa-align-right moveable-able moveable-able-item display-none"></i>
   </div>
-<header id="header" class="clickable" style="display: block; font-size: 12px; line-height: 1;  width: 100%; position: relative; z-index: 1; background: #f5f5f5">
-    <div id="header-content" style="padding: 0 10px; margin: 0 10px;" >
-      <div class="editor-selector">
-        <p style=""><span>Prof. Dr. Hasan Shahriar</span></p>
-        <p style=""><span>MBBS, MD (Psychiatry)</span></p>
-        <p style=""><span>Psychiatrist</span></p>
-        <p style=""><span>Associate Professor and Head of Department of Psychiatry</span></p>
-        <p style=""><span>Holy Family Red Crescent Medical College, Dhaka</span></p>
-        <p style=""><span>Family Red Crescent Medical College, Dhaka</span></p>
+<header id="header" class="clickable" style="display: block; font-size: 12px; line-height: 1.2;  width: 100%; position: relative; background: #f5f5f5">
+    <div id="header-content" style="padding: 10px">
+      <div class="editor-selector editable">
+        <p style="margin: 5px !important;"><span>Prof. Dr. Hasan Shahriar</span></p>
+        <p style="margin: 5px !important;"><span>MBBS, MD (Psychiatry)</span></p>
+        <p style="margin: 5px !important;"><span>Psychiatrist</span></p>
+        <p style="margin: 5px !important;"><span>Associate Professor and Head of Department of Psychiatry</span></p>
+        <p style="margin: 5px !important;"><span>Holy Family Red Crescent Medical College, Dhaka</span></p>
+        <p style="margin: 5px !important;"><span>Family Red Crescent Medical College, Dhaka</span></p>
       </div>
     </div>
 
-    <article style="border-top: 2px solid #000000; border-bottom: 2px solid #000000;padding: 0 20px; margin: 0 10px;" id="header-patient" class="clickable main-content">
+    <article style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; padding: 10px" id="header-patient" class="clickable main-content">
       <!-- Container for the Quill editor toolbar -->
-      <div style="display: flex; justify-content: space-between;align-items: center;">
-        <p class="clickable main-content"><span>Farmer Name:</span> <span>{{ basicInfo.farmerName }}</span></p>
-        <p class="clickable main-content"><span>Address:</span> <span>{{ basicInfo.address }}</span></p>
-        <p class="clickable main-content"><span>Date:</span> <span>{{ basicInfo.date }}</span></p>
+      <div style="display: flex; justify-content: space-between;align-items: center;" class="editable">
+        <p class="clickable main-content" style="margin: 5px !important;"><span>Farmer Name:</span> <span>{{ basicInfo.farmerName }}</span></p>
+        <p class="clickable main-content" style="margin: 5px !important;"><span>Address:</span> <span>{{ basicInfo.address }}</span></p>
+        <p class="clickable main-content" style="margin: 5px !important;"><span>Date:</span> <span>{{ basicInfo.date }}</span></p>
       </div>
     </article>
 </header>
 
-<main id="main-content" class="" style="font-size: 12px; line-height: 1; width: 100%; position: relative">
+<main id="main-content" class="" style="font-size: 12px; line-height: 1.2; width: 100%; position: relative">
 
   <article id="prescription" style="display: flex; justify-content: flex-start;">
     <article style="width: 49%; " id="prescription-left">
-      <div id="complaints" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
-          <p class="clickable main-content"><span>Complaints</span></p>
-        <samp>{{#prescription.complaints}}</samp>
-          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
-            <p class="clickable main-content"><span>Details:</span> <span>{{value}}</span></p>
-            <p class="clickable main-content"><span>{{remarks}}</span></p>
+      <div id="complaints" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
+          <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Complaints</span></p>
+        <samp>{{#each prescription.complaints}}</samp>
+          <div style="page-break-inside: avoid !important;" class="prescription-details">
+            <p class="clickable main-content" style="margin: 5px !important;"><span>Details:</span> <span>{{value}}</span></p>
+            <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
           </div>
-        <samp>{{/prescription.complaints}}</samp>
+        <samp>{{/each}}</samp>
       </div>
 
-      <div id="findings-info" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
-        <p class="clickable main-content"><span>Clinical Findings</span></p>
+      <div id="findings-info" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
+        <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Clinical Findings</span></p>
           <samp>{{#prescription.clinicalFindings}}</samp>
-          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
-            <p class="clickable main-content" ><span>Details:</span> <span>{{value}}</span></p>
-            <p class="clickable main-content"><span>{{remarks}}</span></p>
+          <div style="page-break-inside: avoid !important;" class="prescription-details">
+            <p class="clickable main-content" style="margin: 5px !important;" ><span>Details:</span> <span>{{value}}</span></p>
+            <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
           </div>
 
         <samp>{{/prescription.clinicalFindings}}</samp>
       </div>
 
-      <div id="postmortem-info" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
-        <p class="clickable main-content"><span>Postmortem Findings</span></p>
+      <div id="postmortem-info" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
+        <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Postmortem Findings</span></p>
         <samp>{{#prescription.postmortemFindings}}</samp>
-          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
-            <p class="clickable main-content"><span>Details:</span> <span>{{value}}</span></p>
-            <p class="clickable main-content"><span>{{remarks}}</span></p>
+          <div style="page-break-inside: avoid !important;" class="prescription-details">
+            <p class="clickable main-content" style="margin: 5px !important;"><span>Details:</span> <span>{{value}}</span></p>
+            <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
           </div>
           <samp>{{/prescription.postmortemFindings}}</samp>
       </div>
     </article>
 
-    <div id="resizable-divider" style="width: 2px; background-color: #000000; page-break-inside: avoid;cursor: ew-resize; position: relative;"></div>
+    <div id="resizable-divider" style="width: 2px; background-color: #000000; page-break-inside: avoid;cursor: ew-resize; position: relative;" class="">
+      <button id="dragButton" class="display-block resize-button-container" style="cursor: move; z-index: 1; position: absolute; left: -10px; top: 50%">
+        <i class="fa fa-expand-alt resize-button"></i>
+      </button>
+    </div>
 
 
     <article style="width: 49%;" id="prescription-right">
-      <div id="advice-info" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
-          <p class="clickable main-content"><span>Advices</span></p>
+      <div id="advice-info" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
+          <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Advices</span></p>
           <samp>{{#prescription.advices}}</samp>
-          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
-            <p class="clickable main-content"><span>Details:</span> <span>{{value}}</span></p>
-            <p class="clickable main-content"><span>{{remarks}}</span></p>
+          <div style="page-break-inside: avoid !important;" class="prescription-details">
+            <p class="clickable main-content" style="margin: 5px !important;"><span>Details:</span> <span>{{value}}</span></p>
+            <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
           </div>
         <samp>{{/prescription.advices}}</samp>
       </div>
 
-      <div id="medication-info" style="margin: 10px; padding: 0 10px 10px 10px;" class="area-selector clickable main-content moveable">
-          <p class="clickable main-content"><span>Medications</span></p>
+      <div id="medication-info" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
+          <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Medications</span></p>
         <samp>{{#prescription.medications}}</samp>
-          <div style="padding: 5px;margin: 5px; page-break-inside: avoid !important;" class="prescription-details area-selector">
-            <p class="clickable main-content"><span>{{brandName}} {{strength}}</span> </p>
-            <p class="clickable main-content"><span>{{quantity}}gm + {{quantity}}gm + {{quantity}}gm</span></p>
-            <p class="clickable main-content"><span>{{remarks}}</span></p>
+          <div style="page-break-inside: avoid !important;" class="prescription-details">
+            <p class="clickable main-content" style="margin: 5px !important;"><span>{{@index}}. {{brandName}} {{strength}}</span> </p>
+            <p class="clickable main-content" style="margin: 5px !important;"><span>{{quantity}}gm + {{quantity}}gm + {{quantity}}gm</span></p>
+            <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
           </div>
         <samp>{{/prescription.medications}}</samp>
       </div>
@@ -142,13 +152,13 @@
 
 </main>
 
-  <footer id="footer" style="line-height: 1;margin: 10px;height: 100px;" class="clickable">
-    <article style="padding: 0 10px; width: 100%;  white-space: nowrap; display: flex; justify-content: flex-start; align-items: center" class="footer-content area-selector">
+  <footer id="footer" style="line-height: 1.2;height: 100px; background-color: #00ff95" class="clickable; ">
+    <article style="width: 100%;  white-space: nowrap; display: flex; justify-content: flex-start; align-items: center" class="footer-content ">
       <div class="qrcode" style=" width: 100px; height: 100px; vertical-align: top; display: flex; justify-content: center; align-items: center"></div>
-      <div style="font-size: 12px;" class="footer-details area-selector">
-        <p style="margin-top: 0!important;"><span>{{prescription.rxNumber}}</span></p>
-        <p style="margin-top: 0!important;"><span>Agro app প্রেসক্রিপশন  পেতে কোডটি স্ক্যান করুন</span></p>
-        <p style="margin-top: 0!important;"><span>Powered by AGRO</span></p>
+      <div style="font-size: 12px;" class="footer-details  editable">
+        <p style="margin: 5px !important;"><span>{{prescription.rxNumber}}</span></p>
+        <p style="margin: 5px !important;"><span>Agro app প্রেসক্রিপশন  পেতে কোডটি স্ক্যান করুন</span></p>
+        <p style="margin: 5px !important;"><span>Powered by AGRO</span></p>
       </div>
     </article>
 
@@ -172,9 +182,4 @@
   </button>
 </article>
 </body>
-
-<!-- External QR code library -->
-<!--This is the liberary which helps to convert simple data to the images-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="js/app.js"></script>
 </html>

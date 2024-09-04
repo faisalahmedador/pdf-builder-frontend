@@ -247,6 +247,34 @@ module.exports  = {
       "packPriceId": 0,
       "price": null,
       "quantity": 0
+    },
+    {
+      "id": 8,
+      "drugId": 2,
+      "brandName": "NAPA",
+      "generic": "PARACETAMOL",
+      "strength": "500mg",
+      "formation": "TAB",
+      "vendor": "BEXIMCO",
+      "customDrugName": null,
+      "remarks": "test",
+      "packPriceId": 0,
+      "price": null,
+      "quantity": 0
+    },
+    {
+      "id": 8,
+      "drugId": 2,
+      "brandName": "NAPA",
+      "generic": "PARACETAMOL",
+      "strength": "500mg",
+      "formation": "TAB",
+      "vendor": "BEXIMCO",
+      "customDrugName": null,
+      "remarks": "test",
+      "packPriceId": 0,
+      "price": null,
+      "quantity": 0
     }
   ],
   "partiallySaved": false
