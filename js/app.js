@@ -19,7 +19,7 @@ import pdfData from "./vendor/pdfInfo";
 import {getUrl} from "./vendor/urls";
 
 // Function to initialize event listeners based on device type
-function initializeEventListeners(event) {
+function initializeEventListeners() {
 
   if (getProjectInitiated()) {
     return;
@@ -49,7 +49,6 @@ function initializeEventListeners(event) {
   const qrcodeNode = document.querySelector('.qrcode');
   qrcodeNode.appendChild(svgNode);
 
-
 }
 
 function initiateQrCode() {
@@ -75,8 +74,12 @@ function onKeyDown(e) {
   paragraphs.forEach(createSpanForParagraph);
 }
 
-document.addEventListener('DOMContentLoaded', initializeEventListeners);
-document.addEventListener('keydown', onKeyDown);
+document.addEventListener('DOMContentLoaded',() => {
+  initializeEventListeners()
+});
+document.addEventListener('keydown', (e) => {
+  onKeyDown(e);
+});
 
 window.updateConfig = function (){
   const container = document.getElementById('body').cloneNode(true);
