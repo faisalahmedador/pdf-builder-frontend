@@ -41,13 +41,16 @@ function initializeEventListeners() {
   appendDragButtons(touchDevice);
   appendResizeButton(touchDevice);
 
-  let svgNode = QRCode({
-    msg :  `${pdfData.prescription.rxNumber}`,
-    pad : 5,
-  });
+// Generate and append QR code only once
+  if (!document.querySelector('.qrcode svg')) { // Check if QR code is already appended
+    let svgNode = QRCode({
+      msg: `${pdfData.prescription.rxNumber}`,
+      pad: 5,
+    });
 
-  const qrcodeNode = document.querySelector('.qrcode');
-  qrcodeNode.appendChild(svgNode);
+    const qrcodeNode = document.querySelector('.qrcode');
+    qrcodeNode.appendChild(svgNode);
+  }
 
 }
 
