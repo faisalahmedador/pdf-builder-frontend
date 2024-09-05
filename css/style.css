@@ -299,6 +299,8 @@ textarea {
 
 .area-selector {
   border: 1px dashed #cccccc;
+  padding-left: 10px;
+  margin-bottom: 10px;
 }
 
 .clickable {

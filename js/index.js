@@ -41,7 +41,6 @@ function initializeEventListeners(event) {
   let svgNode = QRCode({
       msg :  `${pdfData.prescription.rxNumber}`,
       pad : 5,
-      pal : ["#000000", "#f2f4f8"]
     });
 
   const qrcodeNode = document.querySelector('.qrcode');
@@ -130,8 +129,8 @@ window.updateConfig = function (){
       },
       jsonData: pdfData,
       margin: {
-        top: `${document.getElementById('header').offsetHeight -2 }px`,
-        bottom: `${document.getElementById('footer').offsetHeight + 20 }px`,
+        top: `${document.getElementById('header').offsetHeight - 2 }px`,
+        bottom: `${document.getElementById('footer').offsetHeight + 10 }px`,
         left: '10px',
         right: '10px'
       }

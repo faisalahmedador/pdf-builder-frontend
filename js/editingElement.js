@@ -13,7 +13,7 @@ export function editFooterElement(e) {
   if (e.target === e.currentTarget || e.target.tagName === 'ARTICLE') {
     const selectedHtml = document.querySelector('.footer-content');
     setSelectedHtml(selectedHtml);
-    createFunctionPopup(['line-height', 'position-flex']);
+    createFunctionPopup(['padding', 'position-flex']);
   } else if (e.target.classList.contains('footer-details') || e.target.tagName === 'P') {
     const selectedHtml = document.querySelector('.footer-details');
     setSelectedHtml(selectedHtml);
@@ -42,7 +42,7 @@ export function editMainElement(e) {
     const selectedHtml = e.currentTarget;
     setSelectedHtml(selectedHtml);
     if(!touchDevice) {
-      createFunctionPopup(['line-height', 'position']);
+      createFunctionPopup(['padding', 'position']);
     }
   } else if (e.target.classList.contains('moveable')) {
     const selectedHtml = e.target;

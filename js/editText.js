@@ -110,23 +110,39 @@ export function editTextForTouchDevice(htmlElement, event) {
     Object.keys(allSpans).forEach(span => {
       allSpans[span].classList.remove('shrink-span');
     })
-    clonedElement.style.paddingLeft = '10px';
-    clonedElement.style.marginBottom = '10px';
     clonedElement.classList.add('area-selector');
     clonedElement.contentEditable = "true";
     clonedElement.focus();
     clonedElement.addEventListener('click', onElementClick);
     setSelectedHtml(clonedElement);
-    createFunctionPopup(['bold', 'line-height']);
+    createFunctionPopup(['bold', 'padding', 'position']);
   }
 }
 
 function onElementClick(e) {
   e.preventDefault();
   resetPopup(getPopupElement());
-  console.log(e.target)
-  setSelectedHtml(e.target);
-  createFunctionPopup(['bold', 'size']);
+  if(!getSelectedHtml()) return;
+  const prescriptionElement = getSelectedHtml()?.querySelector('.prescription-details');
+  const prescriptionHeader = getSelectedHtml()?.querySelector('.prescription-content-header');
+  const prescriptionWrapper = getSelectedHtml()?.querySelector('.prescription-content-wrapper');
+
+  if(e.target === prescriptionElement || e.target.parentNode.classList.contains('prescription-details')) {
+    setSelectedHtml(prescriptionElement);
+    createFunctionPopup(['bold', 'padding']);
+  } else if(e.target === prescriptionHeader) {
+    setSelectedHtml(prescriptionHeader);
+    createFunctionPopup(['bold', 'padding', 'position'])
+  } else if(e.target === prescriptionWrapper) {
+    setSelectedHtml(prescriptionWrapper);
+    createFunctionPopup(['bold', 'padding', 'position'])
+  } else {
+    console.log(e.target)
+    setSelectedHtml(e.target);
+    createFunctionPopup(['bold', 'padding']);
+  }
+
+
 }
 
 export function editTextForMouseDevice(htmlElement, event) {

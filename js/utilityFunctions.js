@@ -4,7 +4,7 @@ import {editTextForMouseDevice, editTextForTouchDevice} from "./editText";
 import {startResizing} from "./resizing";
 import {
   handleBold,
-  handleClone, handleLineHeight,
+  handleClone, handlePadding,
   handlePosition,
   handlePositionFlex,
   handleRemove, handleRemoveHeader,
@@ -16,8 +16,8 @@ export function createFunctionPopup(functions = []) {
   popupElement.classList.remove('display-none');
   popupElement.classList.add('display-flex');
 
-  const domRect = getSelectedHtml().getBoundingClientRect();
-  const bodyRect = document.getElementById('body').getBoundingClientRect();
+  const domRect = getSelectedHtml()?.getBoundingClientRect() || 30;
+  const bodyRect = document.getElementById('body')?.getBoundingClientRect() || 30;
 
   popupElement.style.top = (domRect.top - 20) + 'px';
   popupElement.style.left = (domRect.left - bodyRect.left) + 'px';
@@ -45,8 +45,8 @@ export function createFunctionPopup(functions = []) {
         case 'remove-header':
           handleRemoveHeader(popupElement);
           break;
-        case 'line-height':
-          handleLineHeight(popupElement);
+        case 'padding':
+          handlePadding(popupElement);
           break;
         default:
           console.warn(`Unknown function name: ${name}`);
@@ -231,9 +231,9 @@ export function determineHeaderFunctions() {
   console.log(header.getAttribute('elements'));
 
   if (!header.getAttribute('elements') || header.getAttribute('elements') === "1") {
-    return ['line-height', 'clone', 'position'];
+    return ['padding', 'clone', 'position'];
   }
-  return ['line-height', 'remove-header', 'position'];
+  return ['padding', 'remove-header', 'position'];
   // Your logic to determine which functions to show in the popup based on the header element
    // Example functions
 }

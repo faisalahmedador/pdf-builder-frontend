@@ -126,8 +126,8 @@ export function handleRemoveHeader(popupElement) {
   });
 }
 
-// Function to handle 'line-height'
-export function handleLineHeight(popupElement) {
+// Function to handle 'padding'
+export function handlePadding(popupElement) {
   const up = popupElement.querySelector('.fa-arrow-up');
   const down = popupElement.querySelector('.fa-arrow-down');
   up.classList.remove('display-none');
@@ -141,17 +141,21 @@ export function handleLineHeight(popupElement) {
   up.addEventListener('mousedown', (e) => {
     e.stopPropagation();
     e.preventDefault();
-    console.log('line-height up')
-    const lineHeight = getComputedStyle(selectedHtml, "").lineHeight;
-    console.log(lineHeight)
-    selectedHtml.style.lineHeight = `${parseInt(lineHeight) + 1}px`;
+    const paddingTop = parseInt(getComputedStyle(selectedHtml).paddingTop);
+    const paddingRight = parseInt(getComputedStyle(selectedHtml).paddingRight);
+
+    selectedHtml.style.paddingTop = `${paddingTop + 1}px`;
+    selectedHtml.style.paddingRight = `${paddingRight + 1}px`;
   });
 
   down.addEventListener('mousedown', (e) => {
     e.stopPropagation();
     e.preventDefault();
-    const lineHeight = getComputedStyle(selectedHtml).lineHeight;
-    selectedHtml.style.lineHeight = `${parseInt(lineHeight) - 1}px`;
+    const paddingTop = parseInt(getComputedStyle(selectedHtml).paddingTop);
+    const paddingRight = parseInt(getComputedStyle(selectedHtml).paddingRight);
+
+    selectedHtml.style.paddingTop = `${paddingTop - 1}px`;
+    selectedHtml.style.paddingRight = `${paddingRight - 1}px`;
   });
 }
 

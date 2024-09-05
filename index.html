@@ -89,7 +89,7 @@
       <div id="complaints" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
           <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Complaints</span></p>
         <samp>{{#each prescription.complaints}}</samp>
-          <div style="page-break-inside: avoid !important;" class="prescription-details">
+          <div style="page-break-inside: avoid !important; padding-top: 2px" class="prescription-details">
             <p class="clickable main-content" style="margin: 5px !important;"><span>Details:</span> <span>{{value}}</span></p>
             <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
           </div>
@@ -99,7 +99,7 @@
       <div id="findings-info" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
         <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Clinical Findings</span></p>
           <samp>{{#prescription.clinicalFindings}}</samp>
-          <div style="page-break-inside: avoid !important;" class="prescription-details">
+          <div style="page-break-inside: avoid !important; padding-top: 2px" class="prescription-details">
             <p class="clickable main-content" style="margin: 5px !important;" ><span>Details:</span> <span>{{value}}</span></p>
             <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
           </div>
@@ -110,7 +110,7 @@
       <div id="postmortem-info" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
         <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Postmortem Findings</span></p>
         <samp>{{#prescription.postmortemFindings}}</samp>
-          <div style="page-break-inside: avoid !important;" class="prescription-details">
+          <div style="page-break-inside: avoid !important; padding-top: 2px" class="prescription-details">
             <p class="clickable main-content" style="margin: 5px !important;"><span>Details:</span> <span>{{value}}</span></p>
             <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
           </div>
@@ -129,7 +129,7 @@
       <div id="advice-info" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
           <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Advices</span></p>
           <samp>{{#prescription.advices}}</samp>
-          <div style="page-break-inside: avoid !important;" class="prescription-details">
+          <div style="page-break-inside: avoid !important; padding-top: 2px" class="prescription-details">
             <p class="clickable main-content" style="margin: 5px !important;"><span>Details:</span> <span>{{value}}</span></p>
             <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
           </div>
@@ -139,7 +139,7 @@
       <div id="medication-info" class="clickable prescription-content-wrapper main-content moveable editable" style="padding: 10px">
           <p class="clickable main-content prescription-content-header" style="margin: 5px !important;"><span>Medications</span></p>
         <samp>{{#prescription.medications}}</samp>
-          <div style="page-break-inside: avoid !important;" class="prescription-details">
+          <div style="page-break-inside: avoid !important; padding-top: 2px" class="prescription-details">
             <p class="clickable main-content" style="margin: 5px !important;"><span>{{@index}}. {{brandName}} {{strength}}</span> </p>
             <p class="clickable main-content" style="margin: 5px !important;"><span>{{quantity}}gm + {{quantity}}gm + {{quantity}}gm</span></p>
             <p class="clickable main-content" style="margin: 5px !important;"><span>{{remarks}}</span></p>
@@ -152,7 +152,7 @@
 
 </main>
 
-  <footer id="footer" style="line-height: 1.2;height: 100px; background-color: #00ff95" class="clickable; ">
+  <footer id="footer" style="line-height: 1.2;height: 100px;" class="clickable; ">
     <article style="width: 100%;  white-space: nowrap; display: flex; justify-content: flex-start; align-items: center" class="footer-content ">
       <div class="qrcode" style=" width: 100px; height: 100px; vertical-align: top; display: flex; justify-content: center; align-items: center"></div>
       <div style="font-size: 12px;" class="footer-details  editable">
