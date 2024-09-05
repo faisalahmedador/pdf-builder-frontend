@@ -3,8 +3,8 @@ import {editFooterElement, editHeaderElement, editMainElement} from "./editingEl
 import {
   getFooterElement,
   getHeaderElement,
-  getMainElement,
-  getTouchDevice,
+  getMainElement, getProjectInitiated,
+  getTouchDevice, setProjectInitiated,
   setQrcode,
   setTouchDevice
 } from "./globalVariables";
@@ -21,9 +21,12 @@ import {getUrl} from "./vendor/urls";
 // Function to initialize event listeners based on device type
 function initializeEventListeners(event) {
 
+  if (getProjectInitiated()) {
+    return;
+  }
 
-  console.log(event)
-  console.log('initialized listeners');
+  setProjectInitiated(true);
+
   const touchDevice = !!(navigator.maxTouchPoints || 'ontouchstart' in document.documentElement);
   setTouchDevice(touchDevice);
 

@@ -3,6 +3,7 @@ let touchDevice = false;
 let selectedHtml = '';
 let qrcode = '';
 let placeholder = '';
+let projectInitiated = false;
 
 const popupElement = document.getElementById('moveable-popup');
 const leftPanel = document.getElementById('prescription-left');
@@ -10,6 +11,14 @@ const rightPanel = document.getElementById('prescription-right');
 const mainElement = document.getElementById('main-content');
 const footerElement = document.getElementById('footer');
 const headerElement = document.getElementById('header');
+
+export function getProjectInitiated() {
+  return projectInitiated;
+}
+
+export function setProjectInitiated(isInitiated) {
+  projectInitiated = isInitiated;
+}
 
 export function getMainElement() {
   return mainElement;
