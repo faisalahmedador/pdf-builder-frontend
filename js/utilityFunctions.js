@@ -169,6 +169,7 @@ function onChange(element, event) {
 }
 
 export function appendDragButtons(touchDevice) {
+  console.log('initiated drag Button')
   const moveableElements = document.querySelectorAll('.moveable');
   moveableElements.forEach((element) => {
     if (touchDevice) {

@@ -37,6 +37,10 @@ function initializeEventListeners() {
     enableMouseEventListener();
   }
 
+  console.log(touchDevice);
+
+  console.log('initiated')
+
   appendEditButtons(touchDevice);
   appendDragButtons(touchDevice);
   appendResizeButton(touchDevice);
