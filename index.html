@@ -21,7 +21,7 @@
 
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#fafafa">
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css'>
   <!-- External QR code library -->
   <!--This is the liberary which helps to convert simple data to the images-->
   <script type="text/javascript" src="js/vendor/qrcode.min.js"></script>
@@ -48,19 +48,45 @@
   </div>
   <div class="moveable-able moveable-able-container display-none" id="moveable-popup" style="z-index: 3">
     <i tooltip="Launch Expression Builder" class="fa fa-bold moveable-able moveable-able-item display-none"></i>
-    <i tooltip="Line height" class="fa fa-arrow-up moveable-able moveable-able-item display-none"></i>
-    <i tooltip="Line height" class="fa fa-arrow-down moveable-able moveable-able-item display-none"></i>
-    <i tooltip="Duplicate" class="fa fa-clone moveable-able moveable-able-item display-none"></i>
-    <i tooltip="Increase Font Size" class="fas fa-plus moveable-able moveable-able-item display-none"></i>
-    <i tooltip="Decrease Font Size" class="fas fa-minus moveable-able moveable-able-item display-none"></i>
 
-    <div class="moveable-able moveable-able-seperator display-none">|</div>
+    <details class="moveable-able-dropdown">
+      <summary class="fas fa-arrow-down-up-across-line moveable-able moveable-able-dropdown-item display-none" tooltip="line-height"></summary>
+      <div class="moveable-able-dropdown-content">
+        <i tooltip="Line height" class="fa fa-arrows-up-to-line moveable-able moveable-able-dropdown-item display-none"></i>
+        <i tooltip="Line height" class="fa fa-arrows-down-to-line moveable-able moveable-able-dropdown-item display-none"></i>
+      </div>
+    </details>
+
+    <!-- Padding Dropdown -->
+    <details class="moveable-able-dropdown">
+      <summary class="fa fa-xmarks-lines moveable-able moveable-able-dropdown-item display-none" tooltip="margin"></summary>
+      <div class="moveable-able-dropdown-content">
+        <i tooltip="Increase margin" class="fas fa-plus moveable-able-dropdown-item"></i>
+        <i tooltip="Decrease margin" class="fas fa-minus moveable-able-dropdown-item"></i>
+      </div>
+    </details>
+    <!-- Font Size Dropdown -->
+    <details class="moveable-able-dropdown">
+      <summary class="fas fa-text-height moveable-able moveable-able-dropdown-item display-none" tooltip="Font Size"></summary>
+      <div class="moveable-able-dropdown-content">
+        <i tooltip="Increase Font Size" class="fas fa-plus-circle moveable-able-dropdown-item"></i>
+        <i tooltip="Decrease Font Size" class="fas fa-minus-circle moveable-able-dropdown-item"></i>
+      </div>
+    </details>
+    <!-- Alignment Dropdown -->
+    <details class="moveable-able-dropdown">
+      <summary class="fa fa-align-justify moveable-able moveable-able-dropdown-item display-none" tooltip="Change Position"></summary>
+      <div class="moveable-able-dropdown-content">
+        <i tooltip="Align Left" class="fa fa-align-left moveable-able-dropdown-item" data="left"></i>
+        <i tooltip="Align Center" class="fa fa-align-center moveable-able-dropdown-item" data="center"></i>
+        <i tooltip="Align Right" class="fa fa-align-right moveable-able-dropdown-item" data="right"></i>
+      </div>
+    </details>
+
     <i tooltip="Delete" class="fa fa-trash moveable-able moveable-able-item display-none"></i>
-    <i tooltip="Change Position" data="left" class="fa fa-align-left moveable-able moveable-able-item display-none"></i>
-    <i tooltip="Change Position" data="center" class="fa fa-align-center moveable-able moveable-able-item display-none"></i>
-    <i tooltip="Change Position" data="right" class="fa fa-align-right moveable-able moveable-able-item display-none"></i>
+    <i tooltip="Duplicate" class="fa fa-clone moveable-able moveable-able-item display-none"></i>
   </div>
-<header id="header" class="clickable" style="display: block; font-size: 12px; line-height: 1.2;  width: 100%; position: relative; background: #f5f5f5">
+<header id="header" class="clickable" style="display: block; font-size: 12px; line-height: 1.2;  width: 100%; position: relative; background: #f5f5f5; font-family: 'Noto Sans Bengali', sans-serif">
     <div id="header-content" style="padding: 10px">
       <div class="editor-selector editable">
         <p style="margin: 5px !important;"><span>Prof. Dr. Hasan Shahriar</span></p>
@@ -75,9 +101,9 @@
     <article style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; padding: 10px" id="header-patient" class="clickable main-content">
       <!-- Container for the Quill editor toolbar -->
       <div style="display: flex; justify-content: space-between;align-items: center;" class="editable">
-        <p class="clickable main-content" style="margin: 5px !important;"><span>Farmer Name:</span> <span>{{ basicInfo.farmerName }}</span></p>
-        <p class="clickable main-content" style="margin: 5px !important;"><span>Address:</span> <span>{{ basicInfo.address }}</span></p>
-        <p class="clickable main-content" style="margin: 5px !important;"><span>Date:</span> <span>{{ basicInfo.date }}</span></p>
+        <p class="clickable main-content" style="margin: 5px !important;"><span>Farmer Name:</span> <span>Abdur Rahim</span></p>
+        <p class="clickable main-content" style="margin: 5px !important;"><span>Address:</span> <span>Dhaka</span></p>
+        <p class="clickable main-content" style="margin: 5px !important;"><span>Date:</span> <span>12/09/2024</span></p>
       </div>
     </article>
 </header>
@@ -119,7 +145,7 @@
     </article>
 
     <div id="resizable-divider" style="width: 2px; background-color: #000000; page-break-inside: avoid;cursor: ew-resize; position: relative;" class="">
-      <button id="dragButton" class="display-block resize-button-container" style="cursor: move; z-index: 1; position: absolute; left: -10px; top: 50%">
+      <button id="dragButton" class="display-block resize-button-container" style="cursor: move; z-index: 1; position: absolute; left: -15px; top: 50%">
         <i class="fa fa-expand-alt resize-button"></i>
       </button>
     </div>
@@ -152,7 +178,7 @@
 
 </main>
 
-  <footer id="footer" style="line-height: 1.2;height: 100px;" class="clickable; ">
+  <footer id="footer" style="line-height: 1.2;height: 100px;font-family: 'Noto Sans Bengali', sans-serif" class="clickable; ">
     <article style="width: 100%;  white-space: nowrap; display: flex; justify-content: flex-start; align-items: center" class="footer-content ">
       <div class="qrcode" style=" width: 100px; height: 100px; vertical-align: top; display: flex; justify-content: center; align-items: center"></div>
       <div style="font-size: 12px;" class="footer-details  editable">

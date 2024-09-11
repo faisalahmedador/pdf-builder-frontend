@@ -10,10 +10,16 @@ export function editFooterElement(e) {
 
   const touchDevice = getTouchDevice();
 
-  if (e.target === e.currentTarget || e.target.tagName === 'ARTICLE') {
+
+  if (e.target.classList.contains('qrcode') || e.target.tagName === 'svg' || e.target.tagName === 'path') {
+    console.log('qrcode')
+    const selectedHtml = document.querySelector('.qrcode');
+    setSelectedHtml(selectedHtml);
+    openResizeModal(selectedHtml);
+  } else if (e.target === e.currentTarget || e.target.tagName === 'ARTICLE') {
     const selectedHtml = document.querySelector('.footer-content');
     setSelectedHtml(selectedHtml);
-    createFunctionPopup(['padding', 'position-flex']);
+    createFunctionPopup(['margin', 'position-flex'], 'wrapper');
   } else if (e.target.classList.contains('footer-details') || e.target.tagName === 'P') {
     const selectedHtml = document.querySelector('.footer-details');
     setSelectedHtml(selectedHtml);
@@ -24,41 +30,31 @@ export function editFooterElement(e) {
       createFunctionPopup(['bold', 'size']);
     }
 
-  } else if (e.target.tagName === 'IMG') {
-    const selectedHtml = e.target;
-    setSelectedHtml(selectedHtml);
-    openResizeModal(selectedHtml);
   }
 }
 
 export function editMainElement(e) {
-  if (!shouldEditElement(e)) return;
+  const touchDevice = getTouchDevice();
+
+  if (!shouldEditElement(e) || touchDevice) return;
 
   if (getSelectedHtml()) removeSelectedHtml();
-
-  const touchDevice = getTouchDevice();
 
   if (e.target === e.currentTarget || e.target.tagName === 'ARTICLE') {
     const selectedHtml = e.currentTarget;
     setSelectedHtml(selectedHtml);
-    if(!touchDevice) {
-      createFunctionPopup(['padding', 'position']);
-    }
+    createFunctionPopup(['margin', 'position']);
   } else if (e.target.classList.contains('moveable')) {
     const selectedHtml = e.target;
     setSelectedHtml(selectedHtml);
   } else if (e.target.classList.contains('prescription-details')) {
     const selectedHtml = e.target;
     setSelectedHtml(selectedHtml);
-    if (!touchDevice) {
-      createFunctionPopup(['bold', 'size']);
-    }
+    createFunctionPopup(['bold', 'size']);
   } else if (e.target.tagName === 'SPAN') {
     const selectedHtml = e.target;
     setSelectedHtml(selectedHtml);
-    if (!touchDevice) {
-      createFunctionPopup(['bold', 'size']);
-    }
+    createFunctionPopup(['bold', 'size']);
   }
 }
 
@@ -67,19 +63,10 @@ export function editHeaderElement(event) {
 
   if (getSelectedHtml()) removeSelectedHtml();
 
-  const touchDevice = getTouchDevice();
-  if (event.target === event.currentTarget || event.target.tagName === 'DIV' || event.target.tagName === 'P') {
-    const selectedHtml = event.currentTarget;
-    setSelectedHtml(selectedHtml);
-    const functions = determineHeaderFunctions();
-    createFunctionPopup(functions);
-  } else {
-    const selectedHtml = event.target;
-    setSelectedHtml(selectedHtml);
-    if (!touchDevice) {
-      createFunctionPopup(['bold', 'size']);
-    }
-  }
+  const selectedHtml = event.currentTarget;
+  setSelectedHtml(selectedHtml);
+  const functions = determineHeaderFunctions();
+  createFunctionPopup(functions, 'wrapper');
 }
 
 function shouldEditElement(e) {

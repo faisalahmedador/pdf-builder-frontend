@@ -6,38 +6,49 @@ import {editTextForMouseDevice, editTextForTouchDevice} from "./editText";
 import {createEditButton} from "./utilityFunctions";
 
 export function handlePosition(popupElement) {
-  const positions = popupElement.querySelectorAll('i[class*="fa-align"]');
-  positions.forEach(position => {
-    position.classList.remove('display-none');
-    position.classList.add('display-flex');
-    position.addEventListener('mousedown', (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      getSelectedHtml().style.textAlign = position.getAttribute('data');
+  const selectPosition = document.querySelector('.fa-align-justify');
+  const positions = document.querySelectorAll('i[class*="fa-align"]');
+  selectPosition.classList.remove('display-none');
+  selectPosition.classList.add('display-flex');
+  selectPosition.addEventListener('mousedown', (e) => {
+    positions.forEach(position => {
+      position.classList.remove('display-none');
+      position.classList.add('display-flex');
+      position.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        getSelectedHtml().style.textAlign = position.getAttribute('data');
+      });
     });
-  });
+  })
 }
 
 // Function to handle 'position-flex'
 export function handlePositionFlex(popupElement) {
-  const positions = popupElement.querySelectorAll('i[class*="fa-align"]');
-  positions.forEach(position => {
-    position.classList.remove('display-none');
-    position.classList.add('display-flex');
-    position.addEventListener('mousedown', (e) => {
-      e.stopPropagation();
-      e.preventDefault();
+  const selectPosition = document.querySelector('.fa-align-justify');
+  const positions = document.querySelectorAll('i[class*="fa-align"]');
+  selectPosition.classList.remove('display-none');
+  selectPosition.classList.add('display-flex');
+  selectPosition.addEventListener('mousedown', (e) => {
+    positions.forEach(position => {
+      position.classList.remove('display-none');
+      position.classList.add('display-flex');
+      position.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
 
-      const dataAttr = position.getAttribute('data');
-      if (dataAttr === 'left') {
-        getSelectedHtml().style.justifyContent = 'flex-start';
-      } else if (dataAttr === 'center') {
-        getSelectedHtml().style.justifyContent = 'center';
-      } else if (dataAttr === 'right') {
-        getSelectedHtml().style.justifyContent = 'flex-end';
-      }
+        const dataAttr = position.getAttribute('data');
+        if (dataAttr === 'left') {
+          getSelectedHtml().style.justifyContent = 'flex-start';
+        } else if (dataAttr === 'center') {
+          getSelectedHtml().style.justifyContent = 'center';
+        } else if (dataAttr === 'right') {
+          getSelectedHtml().style.justifyContent = 'flex-end';
+        }
+      });
     });
-  });
+  })
+
 }
 
 // Function to handle 'bold'
@@ -60,31 +71,38 @@ export function handleBold(popupElement) {
 
 // Function to handle 'size'
 export function handleSize(popupElement) {
-  const plus = popupElement.querySelector('.fa-plus');
-  const minus = popupElement.querySelector('.fa-minus');
-  plus.classList.remove('display-none');
-  plus.classList.add('display-flex');
+  const size = document.querySelector('.fa-text-height');
+  const sizeIncrease = document.querySelector('.fa-plus-circle');
+  const sizeDecrease = document.querySelector('.fa-minus-circle');
 
-  minus.classList.remove('display-none');
-  minus.classList.add('display-flex');
+  size.classList.remove('display-none');
+  size.classList.add('display-flex');
 
-  plus.addEventListener('mousedown', (e) => {
+
+  size.addEventListener('mousedown', (e) => {
     e.stopPropagation();
     e.preventDefault();
-    const fontSize = getComputedStyle(getSelectedHtml()).fontSize;
-    if (parseInt(fontSize) >= 10 && parseInt(fontSize) <= 20) {
-      getSelectedHtml().style.fontSize = `${parseInt(fontSize) + 1}px`;
-    }
-  });
+    sizeIncrease.classList.remove('display-none');
+    sizeIncrease.classList.add('display-flex');
 
-  minus.addEventListener('mousedown', (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const fontSize = getComputedStyle(getSelectedHtml()).fontSize;
-    if (parseInt(fontSize) >= 10 && parseInt(fontSize) <= 20) {
-      getSelectedHtml().style.fontSize = `${parseInt(fontSize) - 1}px`;
-    }
-  });
+    sizeDecrease.classList.remove('display-none');
+    sizeDecrease.classList.add('display-flex');
+
+    sizeIncrease.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const fontSize = getComputedStyle(getSelectedHtml()).fontSize;
+      console.log(fontSize)
+      getSelectedHtml().style.fontSize = `${parseFloat(fontSize) + .5}px`;
+    });
+
+    sizeDecrease.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const fontSize = getComputedStyle(getSelectedHtml()).fontSize;
+      getSelectedHtml().style.fontSize = `${parseFloat(fontSize) - .5}px`;
+    });
+  })
 }
 
 // Function to handle 'remove'
@@ -127,36 +145,80 @@ export function handleRemoveHeader(popupElement) {
 }
 
 // Function to handle 'padding'
-export function handlePadding(popupElement) {
-  const up = popupElement.querySelector('.fa-arrow-up');
-  const down = popupElement.querySelector('.fa-arrow-down');
-  up.classList.remove('display-none');
-  up.classList.add('display-flex');
+export function handleMargin(popupElement) {
+  const margin = document.querySelector('.fa-xmarks-lines');
+  const marginIncrease = document.querySelector('.fa-plus');
+  const marginDecrease = document.querySelector('.fa-minus');
 
-  down.classList.remove('display-none');
-  down.classList.add('display-flex');
+  margin.classList.remove('display-none');
+  margin.classList.add('display-flex');
 
-  const selectedHtml = getSelectedHtml();
-  console.log(selectedHtml);
-  up.addEventListener('mousedown', (e) => {
+  margin.addEventListener('mousedown', (e) => {
     e.stopPropagation();
     e.preventDefault();
-    const paddingTop = parseInt(getComputedStyle(selectedHtml).paddingTop);
-    const paddingRight = parseInt(getComputedStyle(selectedHtml).paddingRight);
+    marginIncrease.classList.remove('display-none');
+    marginIncrease.classList.add('display-flex');
 
-    selectedHtml.style.paddingTop = `${paddingTop + 1}px`;
-    selectedHtml.style.paddingRight = `${paddingRight + 1}px`;
-  });
+    marginDecrease.classList.remove('display-none');
+    marginDecrease.classList.add('display-flex');
 
-  down.addEventListener('mousedown', (e) => {
-    e.stopPropagation();
+    const selectedHtml = getSelectedHtml();
+    marginIncrease.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const marginLeft = parseInt(getComputedStyle(selectedHtml).marginLeft);
+      const marginRight = parseInt(getComputedStyle(selectedHtml).marginRight);
+
+      selectedHtml.style.marginLeft = `${marginLeft + 1}px`;
+      selectedHtml.style.marginRight = `${marginRight + 1}px`;
+    });
+
+    marginDecrease.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const marginLeft = parseInt(getComputedStyle(selectedHtml).marginLeft);
+      const marginRight = parseInt(getComputedStyle(selectedHtml).marginRight);
+
+      selectedHtml.style.marginLeft = `${marginLeft - 1}px`;
+      selectedHtml.style.marginRight = `${marginRight - 1}px`;
+    });
+  })
+
+}
+
+export function handleLineHeight() {
+  const lineHeight = document.querySelector('.fa-arrow-down-up-across-line');
+  const upLine = document.querySelector('.fa-arrows-up-to-line');
+  const downLine = document.querySelector('.fa-arrows-down-to-line');
+
+  lineHeight.classList.remove('display-none');
+  lineHeight.classList.add('display-flex');
+
+  lineHeight.addEventListener('mousedown', (e) => {
     e.preventDefault();
-    const paddingTop = parseInt(getComputedStyle(selectedHtml).paddingTop);
-    const paddingRight = parseInt(getComputedStyle(selectedHtml).paddingRight);
+    upLine.classList.remove('display-none');
+    upLine.classList.add('display-flex');
 
-    selectedHtml.style.paddingTop = `${paddingTop - 1}px`;
-    selectedHtml.style.paddingRight = `${paddingRight - 1}px`;
-  });
+    downLine.classList.remove('display-none');
+    downLine.classList.add('display-flex');
+
+    const selectedHtml = getSelectedHtml();
+    console.log(selectedHtml);
+    upLine.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const lineHeight = parseInt(getComputedStyle(selectedHtml).lineHeight);
+
+      selectedHtml.style.lineHeight = `${lineHeight + 1}px`;
+    });
+
+    downLine.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const lineHeight = parseInt(getComputedStyle(selectedHtml).lineHeight);
+      selectedHtml.style.lineHeight = `${lineHeight - 1}px`;
+    });
+  })
 }
 
 function cloneHeaderElement() {
@@ -173,7 +235,7 @@ function cloneHeaderElement() {
   headerContainer.style.alignItems = 'center';
   headerContainer.setAttribute('elements', '2');
   resetPopup(getPopupElement());
-  createFunctionPopup(determineHeaderFunctions());
+  createFunctionPopup(determineHeaderFunctions(), 'wrapper');
   headerContainer.appendChild(newElement);
 }
 
@@ -188,5 +250,5 @@ function removeHeaderContent() {
   headerContainer.style.alignItems = '';
   headerContainer.setAttribute('elements', '1');
   resetPopup(getPopupElement());
-  createFunctionPopup(determineHeaderFunctions());
+  createFunctionPopup(determineHeaderFunctions(), 'wrapper');
 }

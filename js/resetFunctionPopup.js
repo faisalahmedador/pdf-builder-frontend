@@ -4,14 +4,22 @@ export function resetPopup(popupElement) {
     popupElement.classList.add('display-none');
   }
 
-  const positions = popupElement.querySelectorAll('i[class*="fa"]');
-  positions.forEach(position => {
-    if(position.classList?.contains('display-flex')) {
-      position.classList.remove('display-flex');
-      position.classList.add('display-none');
+  const movableItem = popupElement.querySelectorAll('.moveable-able-item');
+  const movableDropdown = popupElement.querySelectorAll('.moveable-able-dropdown-item');
+  resetElement(movableItem, true);
+  resetElement(movableDropdown, false);
+}
+
+function resetElement(elements, cloneNode = false) {
+  elements.forEach(element => {
+    if(element.classList?.contains('display-flex')) {
+      element.classList.remove('display-flex');
+      element.classList.add('display-none');
     }
 
-    const newPosition = position.cloneNode(true);
-    position.parentNode.replaceChild(newPosition, position);
+    if(cloneNode) {
+      const newElement = element.cloneNode(true);
+      element.parentNode.replaceChild(newElement, element);
+    }
   });
 }

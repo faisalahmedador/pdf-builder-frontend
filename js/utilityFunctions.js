@@ -1,29 +1,52 @@
-import {getPopupElement, getSelectedHtml} from "./globalVariables";
+import {getFooterElement, getPopupElement, getSelectedHtml, setSelectedHtml} from "./globalVariables";
 import {onDragStart} from "./drag&drop";
 import {editTextForMouseDevice, editTextForTouchDevice} from "./editText";
 import {startResizing} from "./resizing";
 import {
   handleBold,
-  handleClone, handlePadding,
+  handleClone, handleLineHeight, handleMargin,
   handlePosition,
   handlePositionFlex,
   handleRemove, handleRemoveHeader,
   handleSize
 } from "./functionsForPopup";
+import pdfData from "./vendor/pdfInfo";
 
-export function createFunctionPopup(functions = []) {
+export function createFunctionPopup(functions = [], type = 'content') {
   const popupElement = getPopupElement();
   popupElement.classList.remove('display-none');
   popupElement.classList.add('display-flex');
 
+  console.log(type)
+
   const domRect = getSelectedHtml()?.getBoundingClientRect() || 30;
   const bodyRect = document.getElementById('body')?.getBoundingClientRect() || 30;
 
-  popupElement.style.top = (domRect.top - 20) + 'px';
-  popupElement.style.left = (domRect.left - bodyRect.left) + 'px';
+  console.log(domRect.right - bodyRect.right)
+
+  if (type === 'content') {
+    popupElement.style.top = (domRect.top - 50) + 'px';
+    if (domRect.right - bodyRect.right < -40) {
+      popupElement.style.right = (domRect.right - 70) + 'px';
+    } else {
+      popupElement.style.right = (domRect.right - bodyRect.right + 50) + 'px';
+    }
+  } else {
+    popupElement.style.top = (domRect.top + 20) + 'px';
+    popupElement.style.right = (domRect.right - bodyRect.right + 100) + 'px';
+  }
+
+
+
 
     functions.forEach((name) => {
       switch (name) {
+        case 'line-height':
+          handleLineHeight(popupElement);
+          break;
+        case 'margin':
+          handleMargin(popupElement);
+          break;
         case 'position':
           handlePosition(popupElement);
           break;
@@ -45,9 +68,8 @@ export function createFunctionPopup(functions = []) {
         case 'remove-header':
           handleRemoveHeader(popupElement);
           break;
-        case 'padding':
-          handlePadding(popupElement);
-          break;
+
+
         default:
           console.warn(`Unknown function name: ${name}`);
       }
@@ -229,18 +251,59 @@ export function determineHeaderFunctions() {
 
   const header = document.getElementById('header-content');
 
-  console.log(header.getAttribute('elements'));
-
   if (!header.getAttribute('elements') || header.getAttribute('elements') === "1") {
-    return ['padding', 'clone', 'position'];
+    return ['line-height','margin','position', 'clone'];
   }
-  return ['padding', 'remove-header', 'position'];
-  // Your logic to determine which functions to show in the popup based on the header element
-   // Example functions
+  return ['line-height','margin','position', 'remove-header'];
 }
 
 export function openResizeModal(imageElement) {
-  // Your implementation to open a modal for resizing the image
+  const resizeModal = document.getElementById('resizeModal');
+  const widthInput = document.getElementById('width');
+  const heightInput = document.getElementById('height');
+  const applyButton = document.getElementById('applyResize');
+  const cancelButton = document.getElementById('cancelResize');
+
+  console.log(resizeModal)
+
+
+  const bodyRect = document.getElementById('body').getBoundingClientRect();
+
+  resizeModal.style.display = 'block';
+  const domRect = getFooterElement().getBoundingClientRect();
+  console.log(domRect, bodyRect)
+  resizeModal.style.top = (domRect.top - 200) + 'px';
+  resizeModal.style.left = (domRect.left - bodyRect.left) + 'px';
+  // Set initial values in inputs
+  widthInput.value = getSelectedHtml().offsetWidth;
+  heightInput.value = getSelectedHtml().offsetHeight;
+
+  applyButton.addEventListener('mousedown', function (e) {
+    const newWidth = parseInt(widthInput.value, 10);
+    const newHeight = parseInt(heightInput.value, 10);
+
+    const qrcodeNode = document.querySelector('.qrcode');
+    qrcodeNode.innerHTML = '';
+
+    qrcodeNode.style.width = newWidth + 'px';
+    qrcodeNode.style.height = newHeight + 'px';
+
+    let svgNode = QRCode({
+      msg: `${pdfData.prescription.rxNumber}`,
+      pad: 5,
+    });
+
+    qrcodeNode.appendChild(svgNode);
+    // Hide the modal
+    resizeModal.style.display = 'none';
+    setSelectedHtml('')
+  })
+
+  // Cancel button mousedown event
+  cancelButton.addEventListener('mousedown', () => {
+    // Hide the modal
+    resizeModal.style.display = 'none';
+  });
 }
 
 // Function to create and insert a <span> around the inner HTML of a <p> tag

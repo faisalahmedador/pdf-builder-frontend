@@ -294,6 +294,8 @@ textarea {
 
 .display-flex {
   display: flex !important;
+  justify-content: center;
+  align-items: baseline;
   z-index: 2;
 }
 
@@ -312,14 +314,11 @@ textarea {
 }
 
 .moveable-able-container .moveable-able-item {
-  padding: 2px 3px;
+  padding: 8px;
   margin-top: 8px;
-  width: 18px;
   height: 18px;
   text-align: center;
 }
-
-
 .moveable-able-container .moveable-able-seperator {
   display: inline-block;
   margin-left: 10px !important;
@@ -401,14 +400,32 @@ samp {
 }
 
 
+.moveable-able-dropdown {
+  display: inline-block;
+  position: relative;
+}
 
+.moveable-able-dropdown summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-block;
+}
 
+.moveable-able-dropdown-content {
+  position: absolute;
+  background-color: #4af;
+  padding: 5px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
 
-@media screen and (max-width: 480px){
-  /*span {*/
-  /*  font-size: 10px !important;*/
-  /*}*/
-  /*.a4-page {*/
-  /*  margin: 10px !important;*/
-  /*}*/
+.moveable-able-dropdown-item {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.moveable-able-seperator {
+  display: inline-block;
+  margin: 0 10px;
+  color: #ccc;
 }

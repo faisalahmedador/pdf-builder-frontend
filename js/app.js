@@ -137,12 +137,12 @@ window.updateConfig = function (){
   const data = {
     templates: {
       header: header.outerHTML,
-      footer: footer.outerHTML,
+      footer: footer.innerHTML,
       main: main.innerHTML,
     },
     jsonData: pdfData,
     margin: {
-      top: `${document.getElementById('header').offsetHeight - 2 }px`,
+      top: `${document.getElementById('header').offsetHeight + 9 }px`,
       bottom: `${document.getElementById('footer').offsetHeight + 10 }px`,
       left: '10px',
       right: '10px'

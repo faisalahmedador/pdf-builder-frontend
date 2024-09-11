@@ -115,7 +115,7 @@ export function editTextForTouchDevice(htmlElement, event) {
     clonedElement.focus();
     clonedElement.addEventListener('click', onElementClick);
     setSelectedHtml(clonedElement);
-    createFunctionPopup(['bold', 'padding', 'position']);
+    createFunctionPopup(['bold', 'margin']);
   }
 }
 
@@ -123,24 +123,26 @@ function onElementClick(e) {
   e.preventDefault();
   resetPopup(getPopupElement());
   if(!getSelectedHtml()) return;
-  const prescriptionElement = getSelectedHtml()?.querySelector('.prescription-details');
-  const prescriptionHeader = getSelectedHtml()?.querySelector('.prescription-content-header');
-  const prescriptionWrapper = getSelectedHtml()?.querySelector('.prescription-content-wrapper');
 
-  if(e.target === prescriptionElement || e.target.parentNode.classList.contains('prescription-details')) {
-    setSelectedHtml(prescriptionElement);
-    createFunctionPopup(['bold', 'padding']);
-  } else if(e.target === prescriptionHeader) {
-    setSelectedHtml(prescriptionHeader);
-    createFunctionPopup(['bold', 'padding', 'position'])
-  } else if(e.target === prescriptionWrapper) {
-    setSelectedHtml(prescriptionWrapper);
-    createFunctionPopup(['bold', 'padding', 'position'])
-  } else {
-    console.log(e.target)
-    setSelectedHtml(e.target);
-    createFunctionPopup(['bold', 'padding']);
-  }
+  setSelectedHtml(e.target);
+  createFunctionPopup(['bold', 'margin', 'size']);
+  // const prescriptionElement = getSelectedHtml()?.querySelector('.prescription-details');
+  // const prescriptionHeader = getSelectedHtml()?.querySelector('.prescription-content-header');
+  // const prescriptionWrapper = getSelectedHtml()?.querySelector('.prescription-content-wrapper');
+  //
+  // if(e.target === prescriptionElement || e.target.parentNode.classList.contains('prescription-details')) {
+  //   setSelectedHtml(prescriptionElement);
+  //   createFunctionPopup(['bold', 'margin']);
+  // } else if(e.target === prescriptionHeader) {
+  //   setSelectedHtml(prescriptionHeader);
+  //   createFunctionPopup(['bold', 'margin', 'position'])
+  // } else if(e.target === prescriptionWrapper) {
+  //   setSelectedHtml(prescriptionWrapper);
+  //   createFunctionPopup(['bold', 'margin', 'position'])
+  // } else {
+  //   console.log(e.target)
+  //
+  // }
 
 
 }
